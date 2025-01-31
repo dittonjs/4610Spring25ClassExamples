@@ -1,0 +1,6 @@
+{
+  "name": "Client Container",
+  "dockerComposeFile": "../../docker-compose.yml",
+  "service": "client",
+  "workspaceFolder": "/app"
+}
