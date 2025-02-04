@@ -1,7 +1,22 @@
 volumes:
   server_node_modules:
   client_node_modules:
+  db_data:
 services:
+  db:
+    image: postgres:latest
+    container_name: db
+    env_file:
+      - ./server/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   server:
     build:
       context: ./server
@@ -13,6 +28,8 @@ services:
       - "3000:3000"
     env_file:
       - ./server/.env
+    depends_on:
+      - db
 
   client:
     build:
