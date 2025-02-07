@@ -13,8 +13,3 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Counter {
-  id    Int     @id @default(autoincrement())
-  value Int     @default(0)
-}
-

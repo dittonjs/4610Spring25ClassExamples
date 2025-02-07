@@ -1,10 +1,6 @@
 import express from 'express';
 import { config } from 'dotenv';
 import http from 'http';
-import { PrismaClient } from '@prisma/client';
-import { count } from 'console';
-
-const prisma = new PrismaClient();
 
 
 // load environment variables
@@ -33,7 +29,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {
+
+app.get('*', (req, res) => {
   res.send(`
     <!doctype html>
     <html lang="en">
@@ -59,44 +56,6 @@ app.get('/', (req, res) => {
     `);
 });
 
-app.post('/api/counter', async (req, res) => {
-  const count = await prisma.counter.findFirst({
-    where: {
-      id: 1
-    }
-  });
-  if (count) {
-    await prisma.counter.update({
-      where: {
-        id: 1
-      },
-      data: {
-        value: count.value + 1
-      }
-    });
-    res.json({ count: count.value + 1 });
-  } else {
-    await prisma.counter.create({
-      data: {
-        value: 1
-      }
-    });
-    res.json({ count: 1 });
-  }
-});
-
-app.get("/api/count", async (req, res) => {
-  const count = await prisma.counter.findFirst({
-    where: {
-      id: 1
-    }
-  });
-  if (count) {
-    res.json({ count: count.value });
-  } else {
-    res.json({ count: 0 });
-  }
-})
 
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

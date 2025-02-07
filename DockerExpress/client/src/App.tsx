@@ -1,10 +1,32 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    async function getCount() {
+      const res = await fetch('/api/count')
+      const data = await res.json()
+      setCount(data.count)
+    }
+    getCount();
+  }, [])
+
+  useEffect(() => {
+    async function updateCount() {
+      await fetch('/api/counter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ count })
+      })
+    }
+    updateCount();
+  }, [count])
 
   return (
     <>
