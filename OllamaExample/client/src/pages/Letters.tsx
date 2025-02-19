@@ -7,6 +7,8 @@ export function Letters() {
       .then(res => res.json())
       .then(console.log);
   }, [])
+
+
   return (
     <div className="letters">
       <Link to="/new" className="new-letter">+ New Letter of Recommendation</Link>

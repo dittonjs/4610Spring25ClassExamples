@@ -26,6 +26,7 @@ services:
     container_name: ollama_demo_server
     volumes:
       - ./server:/app
+      - ./prisma:/app/prisma
       - server_node_modules:/app/node_modules
     ports:
       - "3000:3000"
@@ -57,6 +58,7 @@ services:
     container_name: ollama_demo_worker
     volumes:
       - ./worker:/app
+      - ./prisma:/app/prisma
       - worker_node_modules:/app/node_modules
     env_file:
       - ./worker/.env

@@ -1,13 +1,20 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export function CreateLetter() {
-  const [name, setName] = useState("")
-  const [jobTitle, setJobTitle] = useState("");
-  const [companyName, setCompanyName] = useState("");
+  const [title, setTitle] = useState("")
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // todo submit this
+    await fetch("/api/letters", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ title });
+    })
+    navigate("/");
   }
 
   return (
@@ -15,16 +22,8 @@ export function CreateLetter() {
       <h3>New Letter</h3>
       <form onSubmit={handleSubmit} className="letter-form">
         <div className="field">
-          <label htmlFor="name">Person Name</label>
-          <input type="text" name="name" value={name} onChange={e => setName(e.target.value)}/>
-        </div>
-        <div className="field">
-          <label htmlFor="job-title">Job Title</label>
-          <input type="text" name="job-title" value={jobTitle} onChange={e => setJobTitle(e.target.value)} />
-        </div>
-        <div className="field">
-          <label htmlFor="company-name">Company Name</label>
-          <input type="text" name="company-name" value={companyName} onChange={e => setCompanyName(e.target.value)} />
+          <label htmlFor="name">Letter Title</label>
+          <input type="text" name="name" value={title} onChange={e => setTitle(e.target.value)}/>
         </div>
         <button type="submit">Create</button>
       </form>

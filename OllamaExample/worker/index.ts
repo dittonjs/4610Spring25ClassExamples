@@ -1,15 +1,31 @@
+import { PrismaClient } from "@prisma/client";
 import { Worker } from "bullmq";
 import { config } from "dotenv";
+import { Ollama } from "ollama";
 config();
 
-function fib(n: number): number {
-  if (n <= 1) return n;
-  return fib(n - 1) + fib(n - 2);
+const client = new PrismaClient();
+
+const ollama = new Ollama({
+  host: process.env.OLLAMA_URL,
+});
+
+type LetterJobPayload = {
+  letterId: number;
 }
 
-new Worker("fibonacci", async (job) => {
-  console.log(job.data);
-  console.log(fib(job.data.n));
+new Worker("letters", async (job) => {
+  const {letterId} = job.data as LetterJobPayload;
+  console.log(`Processing letter ${letterId}`);
+  const letter = await client.letter.findUnique({
+    where: { id: letterId },
+  });
+
+  const response = await ollama.chat({
+    model: 'tinyllama',
+    messages: [{ role: 'user', content:`Generate me a letter of recommendation for the following information: ${letter?.title}`  }]
+  })
+  console.log(response)
 }, {
   connection: {
     host: process.env.REDIS_HOST,

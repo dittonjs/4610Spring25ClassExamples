@@ -3,8 +3,11 @@ import { config } from 'dotenv';
 import http from 'http';
 import { Ollama } from "ollama";
 import { Queue } from 'bullmq';
+import { PrismaClient } from '@prisma/client';
 
-const fibonacciQueue = new Queue('fibonacci', {
+const prisma = new PrismaClient()
+
+const lettersQueue = new Queue('letters', {
   connection: {
     host: process.env.REDIS_HOST,
     port: parseInt(process.env.REDIS_PORT || '6379'),
@@ -29,8 +32,9 @@ const app = express();
 const server = http.createServer(app);
 const port = parseInt(process.env.PORT || '3000');
 
-
+// automatically parse json request bodies
 app.use(express.json());
+
 // a simple middleware the redirects
 // to the asset server if the request
 // path contains a dot. We use the dot
@@ -45,19 +49,20 @@ app.use((req, res, next) => {
   next();
 });
 
-// fib sequence
-function fib(n: number): number {
-  if (n <= 1) {
-    return n;
-  }
-  return fib(n - 1) + fib(n - 2);
+type LetterPostBody = {
+  title: string
 }
 
-app.get('/fib', async (req, res) => {
-  await fibonacciQueue.add('fibonacci', {
-    n: 48
+app.post('/api/letters', async (req, res) => {
+  const { title } = req.body as LetterPostBody;
+  const result = await prisma.letter.create({
+    data: {
+      title,
+      content: '',
+    }
   });
-  res.json({ success: true });
+  await lettersQueue.add('generate', { letterId: result.id });
+  res.json(result);
 });
 
 app.get('*', (req, res) => {
