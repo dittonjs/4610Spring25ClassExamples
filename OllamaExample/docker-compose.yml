@@ -1,8 +1,10 @@
 volumes:
   server_node_modules:
   client_node_modules:
+  worker_node_modules:
   db_data:
   ollama:
+  cache:
 services:
   db:
     image: postgres:latest
@@ -31,6 +33,7 @@ services:
       - ./server/.env
     depends_on:
       - db
+      - cache
 
   client:
     build:
@@ -48,3 +51,27 @@ services:
       - "11434:11434"
     volumes:
       - ollama:/root/.ollama
+  worker:
+    build:
+      context: ./worker
+    container_name: ollama_demo_worker
+    volumes:
+      - ./worker:/app
+      - worker_node_modules:/app/node_modules
+    env_file:
+      - ./worker/.env
+    depends_on:
+      - db
+      - cache
+  cache:
+    image: redis:latest
+    container_name: ollama_demo_cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - cache:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

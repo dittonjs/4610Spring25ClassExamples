@@ -2,6 +2,14 @@ import express from 'express';
 import { config } from 'dotenv';
 import http from 'http';
 import { Ollama } from "ollama";
+import { Queue } from 'bullmq';
+
+const fibonacciQueue = new Queue('fibonacci', {
+  connection: {
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT || '6379'),
+  },
+})
 
 const ollama = new Ollama({
   host: process.env.OLLAMA_URL,
@@ -37,7 +45,22 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {
+// fib sequence
+function fib(n: number): number {
+  if (n <= 1) {
+    return n;
+  }
+  return fib(n - 1) + fib(n - 2);
+}
+
+app.get('/fib', async (req, res) => {
+  await fibonacciQueue.add('fibonacci', {
+    n: 48
+  });
+  res.json({ success: true });
+});
+
+app.get('*', (req, res) => {
   res.send(`
     <!doctype html>
     <html lang="en">
@@ -63,19 +86,7 @@ app.get('/', (req, res) => {
     `);
 });
 
-app.post('/api/chat', async (req, res) => {
-  const { prompt } = req.body;
-  try {
-    const response = await ollama.chat({
-      model: 'tinyllama',
-      messages: [{ role: 'user', content: prompt }],
-    });
-    res.json({ response });
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'An error occurred while processing your request.' });
-  }
-});
+
 
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

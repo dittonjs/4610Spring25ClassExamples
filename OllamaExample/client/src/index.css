@@ -24,8 +24,6 @@ body {
 }
 
 .app {
-  display: flex;
-  flex-direction: column;
   height: 100%;
 }
 
@@ -58,4 +56,28 @@ body {
 .input input {
   flex: 1;
   padding: 8px;
+}
+
+.title {
+  background-color: rebeccapurple;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+}
+
+.new-letter {
+  background-color: rebeccapurple;
+  padding: 16px;
+  color: white;
+  border-radius: 64px;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.letters {
+  padding: 16px;
+}
+
+.new-letter-form {
+  padding: 16px;
 }
