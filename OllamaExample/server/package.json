@@ -9,7 +9,8 @@
     "build": "tsc",
     "prisma-generate": "prisma generate",
     "prisma-migrate": "prisma migrate dev",
-    "prisma-migrate-prod": "prisma migrate deploy"
+    "prisma-migrate-prod": "prisma migrate deploy",
+    "prisma-studio": "prisma studio"
   },
   "author": "",
   "license": "ISC",

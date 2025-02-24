@@ -81,3 +81,16 @@ body {
 .new-letter-form {
   padding: 16px;
 }
+
+.letter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.letter {
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 4px;
+}
