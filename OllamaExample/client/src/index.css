@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -14,8 +16,6 @@
 }
 
 #root {
-  display: flex;
-  flex-direction: column;
   height: 100vh;
 }
 
@@ -23,74 +23,12 @@ body {
   margin: 0;
 }
 
-.app {
-  height: 100%;
-}
 
-.messages {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  padding: 16px;
-  gap: 8px;
-}
-
-.message {
-  border: 1px solid #ccc;
-  padding: 16px;
-  border-radius: 4px;
-}
-
-.message span {
-  font-weight: bold;
-  color: rebeccapurple;
-}
-
-.input {
-  display: flex;
-  padding: 16px;
-  gap: 8px;
-}
-
-.input input {
-  flex: 1;
-  padding: 8px;
-}
-
-.title {
-  background-color: rebeccapurple;
-  padding: 16px;
-  color: white;
-  font-weight: bold;
-}
-
-.new-letter {
-  background-color: rebeccapurple;
-  padding: 16px;
-  color: white;
-  border-radius: 64px;
-  display: inline-block;
-  text-decoration: none;
-}
-
-.letters {
-  padding: 16px;
-}
-
-.new-letter-form {
-  padding: 16px;
-}
-
-.letter-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 16px;
-}
-
-.letter {
-  border: 1px solid #ccc;
-  padding: 16px;
-  border-radius: 4px;
+@keyframes myAnimation {
+  from {
+    border-radius: 16px;
+  }
+  to {
+    border-radius: 64px;
+  }
 }
