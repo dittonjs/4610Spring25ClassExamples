@@ -17,6 +17,9 @@ type LetterJobPayload = {
 new Worker("letters", async (job) => {
   const {letterId} = job.data as LetterJobPayload;
   console.log(`Processing letter ${letterId}`);
+
+  await new Promise((resolve) => setTimeout(resolve,  60000));
+
   const letter = await client.letter.findUnique({
     where: { id: letterId },
   });
@@ -25,7 +28,18 @@ new Worker("letters", async (job) => {
     model: 'tinyllama',
     messages: [{ role: 'user', content:`Generate me a letter of recommendation for the following information: ${letter?.title}`  }]
   })
+
   console.log(response)
+  
+  await client.letter.update({
+    where: { id: letterId },
+    data: {
+      content: response.message.content,
+      generated: true,
+    },
+  });
+
+  console.log(`Letter ${letterId} processed`);
 }, {
   connection: {
     host: process.env.REDIS_HOST,

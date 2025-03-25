@@ -1,0 +1,10 @@
+.list-item {
+  padding: 16px;
+  border: 1px solid white;
+  border-radius: 16px;
+  transition: all .3s ease;
+}
+
+.hovered {
+  border-radius: 64px;
+}

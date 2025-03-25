@@ -4,6 +4,7 @@ import App from './App.tsx'
 import { createBrowserRouter, RouterProvider} from 'react-router'
 import { Letters } from './pages/Letters.tsx'
 import { CreateLetter } from './pages/CreateLetter.tsx'
+import { LetterScreen } from './pages/LetterScreen.tsx'
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: '/new',
         element: <CreateLetter />
+      },
+      {
+        path: '/letters/:id',
+        element: <LetterScreen />
       }
     ]
   }

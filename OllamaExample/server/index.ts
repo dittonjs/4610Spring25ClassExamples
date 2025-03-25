@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { application } from 'express';
 import { config } from 'dotenv';
 import http from 'http';
 import { Ollama } from "ollama";
@@ -55,15 +55,34 @@ type LetterPostBody = {
 
 app.post('/api/letters', async (req, res) => {
   const { title } = req.body as LetterPostBody;
-  const result = await prisma.letter.create({
+  const letter = await prisma.letter.create({
     data: {
       title,
       content: '',
     }
   });
-  await lettersQueue.add('generate', { letterId: result.id });
-  res.json(result);
+  await lettersQueue.add('generate', { letterId: letter.id });
+  res.json({ letter });
 });
+
+app.get('/api/letters', async (req, res) => {
+  const letters = await prisma.letter.findMany();
+  res.json({ letters });
+});
+
+app.get('/api/letters/:id', async (req, res) => {
+  const { id } = req.params;
+  const letter = await prisma.letter.findUnique({
+    where: {
+      id: parseInt(id),
+    }
+  });
+  if (!letter) {
+    res.status(404).json({ error: 'Letter not found' });
+    return;
+  }
+  res.json({ letter });
+})
 
 app.get('*', (req, res) => {
   res.send(`

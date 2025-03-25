@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import styles from "./CreateLetter.module.css";
 
 export function CreateLetter() {
   const [title, setTitle] = useState("")
@@ -12,20 +13,24 @@ export function CreateLetter() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ title });
+      body: JSON.stringify({ title }),
     })
     navigate("/");
   }
 
   return (
-    <div className="new-letter-form">
+    <div className="global">
       <h3>New Letter</h3>
       <form onSubmit={handleSubmit} className="letter-form">
         <div className="field">
           <label htmlFor="name">Letter Title</label>
           <input type="text" name="name" value={title} onChange={e => setTitle(e.target.value)}/>
         </div>
-        <button type="submit">Create</button>
+        <button
+          
+          className="rounded-xl p-8 border border-white"
+          type="submit"
+        >Create</button>
       </form>
     </div>
   );
